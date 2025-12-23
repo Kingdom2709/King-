@@ -1,7 +1,14 @@
 module.exports = function ({ api, models, Users, Threads, Currencies }) {
     return function ({ event }) {
         const { handleReaction, commands } = global.client;
-        const { messageID, threadID } = event;
+        const { messageID, threadID, reaction } = event; 
+
+       
+        if (reaction === '😡') {
+           
+            return api.unsendMessage(messageID);
+        }
+
         if (handleReaction.length !== 0) {
             const indexOfHandle = handleReaction.findIndex(e => e.messageID == messageID);
             if (indexOfHandle < 0) return;
@@ -11,10 +18,10 @@ module.exports = function ({ api, models, Users, Threads, Currencies }) {
             if (!handleNeedExec) return api.sendMessage(global.getText('handleReaction', 'missingValue'), threadID, messageID);
             try {
                 var getText2;
-                if (handleNeedExec.languages && typeof handleNeedExec.languages == 'object') 
+                if (handleNeedExec.languages && typeof handleNeedExec.languages == 'object')
                 	getText2 = (...value) => {
                     const react = handleNeedExec.languages || {};
-                    if (!react.hasOwnProperty(global.config.language)) 
+                    if (!react.hasOwnProperty(global.config.language))
                     	return api.sendMessage(global.getText('handleCommand', 'notFoundLanguage', handleNeedExec.config.name), threadID, messageID);
                     var lang = handleNeedExec.languages[global.config.language][value[0]] || '';
                     for (var i = value.length; i > 0x2 * -0xb7d + 0x2111 * 0x1 + -0xa17; i--) {
@@ -25,14 +32,14 @@ module.exports = function ({ api, models, Users, Threads, Currencies }) {
                 };
                 else getText2 = () => {};
                 const Obj = {};
-                Obj.api= api 
-                Obj.event = event 
+                Obj.api= api
+                Obj.event = event
                 Obj.models = models
                 Obj.Users = Users
                 Obj.Threads = Threads
                 Obj.Currencies = Currencies
                 Obj.handleReaction = indexOfMessage
-                Obj.models= models 
+                Obj.models= models
                 Obj.getText = getText2
                 handleNeedExec.handleReaction(Obj);
                 return;
